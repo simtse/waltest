@@ -10,10 +10,10 @@
         android:id="@+id/diff_db_w_trans"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Diff db - Delay - read w transaction"
-        app:layout_constraintBottom_toTopOf="@+id/same_db_w_trans"
+        android:layout_marginTop="108dp"
+        android:text="Diff db - read with transaction"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.522"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
@@ -22,24 +22,12 @@
         android:id="@+id/same_db_w_trans"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Same db - Delay - read w transaction"
-        app:layout_constraintBottom_toTopOf="@+id/diff_db_without_trans"
+        android:layout_marginTop="12dp"
+        android:text="Same db - read with transaction"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/diff_db_w_trans"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/diff_db_without_trans"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Diff Db - Read w/o transaction"
-        app:layout_constraintBottom_toTopOf="@+id/same_db_without_trans"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/same_db_w_trans"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -47,10 +35,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Same Db - Read w/o transaction"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/diff_db_without_trans"
         tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/diff_db_without_trans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Diff Db - Read w/o transaction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/same_db_w_trans"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/no_delay_with_transaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="no delay with transaction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/same_db_without_trans" />
+
+    <Button
+        android:id="@+id/no_delay_without_transaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="no delay without transaction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/no_delay_with_transaction" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

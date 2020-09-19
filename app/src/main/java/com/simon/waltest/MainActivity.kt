@@ -79,6 +79,24 @@ class MainActivity : AppCompatActivity() {
         false
       )
     }
+
+    binding.mainContent.noDelayWithTransaction.setOnClickListener {
+      testWriteAndReadFromDifferentWritableDatabase(
+        0,
+        dbHelper.writableDatabase,
+        dbHelper.writableDatabase,
+        true
+      )
+    }
+
+    binding.mainContent.noDelayWithoutTransaction.setOnClickListener {
+      testWriteAndReadFromDifferentWritableDatabase(
+        0,
+        dbHelper.writableDatabase,
+        dbHelper.writableDatabase,
+        false
+      )
+    }
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
