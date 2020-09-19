@@ -7,11 +7,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.simon.waltest.TestDatabaseOpenHelperCallback.Companion.TABLE_NAME_TEST
-import com.simon.waltest.databinding.ActivityMainBinding
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -25,20 +26,20 @@ class MainActivity : AppCompatActivity() {
 
   private val compositeDisposable = CompositeDisposable()
 
-  private lateinit var _binding: ActivityMainBinding
-  private val binding get() = _binding
-
   private val dbHelper by lazy {
     TestDatabaseOpenHelperCallback.createSupportSqlOpenHelper(this)
   }
 
+  private val rootView by lazy {
+    findViewById<View>(R.id.root)
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    _binding = ActivityMainBinding.inflate(layoutInflater)
-    setContentView(binding.root)
-    setSupportActionBar(binding.toolbar)
+    setContentView(R.layout.activity_main)
+    setSupportActionBar(findViewById(R.id.toolbar))
 
-    binding.fab.setOnClickListener {
+    findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
       testWriteAndReadFromDifferentWritableDatabase()
     }
   }
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
-          { Snackbar.make(binding.root, "Done Write", Snackbar.LENGTH_SHORT).show() },
+          { Snackbar.make(rootView, "Done Write", Snackbar.LENGTH_SHORT).show() },
           { Log.e(null, "Errored for writing", it) }
         )
     )
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
-          { Snackbar.make(binding.root, "Done Read - $it", Snackbar.LENGTH_SHORT).show() },
+          { Snackbar.make(rootView, "Done Read - $it", Snackbar.LENGTH_SHORT).show() },
           { Log.e(null, "Errored for writing", it) }
         )
     )
