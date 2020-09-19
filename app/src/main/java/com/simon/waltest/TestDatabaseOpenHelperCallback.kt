@@ -6,7 +6,6 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 
 private const val DB_VERSION = 1
-private const val TABLE_NAME_TEST = "test"
 private const val DB_NAME = "wal_test"
 
 class TestDatabaseOpenHelperCallback : SupportSQLiteOpenHelper.Callback(DB_VERSION) {
@@ -24,6 +23,7 @@ class TestDatabaseOpenHelperCallback : SupportSQLiteOpenHelper.Callback(DB_VERSI
   }
 
   companion object {
+    const val TABLE_NAME_TEST = "test"
     fun createSupportSqlOpenHelper(context: Context): SupportSQLiteOpenHelper {
       val config = SupportSQLiteOpenHelper.Configuration.builder(context)
         .name(DB_NAME)
@@ -33,4 +33,5 @@ class TestDatabaseOpenHelperCallback : SupportSQLiteOpenHelper.Callback(DB_VERSI
       return FrameworkSQLiteOpenHelperFactory().create(config)
     }
   }
+
 }
