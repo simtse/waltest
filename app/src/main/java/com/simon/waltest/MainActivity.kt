@@ -48,16 +48,7 @@ class MainActivity : AppCompatActivity() {
       testWriteAndReadFromDifferentWritableDatabase(
         DELAY_DB_WRITE_MS,
         dbHelper.writableDatabase,
-        dbHelper.writableDatabase
-      )
-    }
-
-    binding.mainContent.sameDbWTrans.setOnClickListener {
-      val db = dbHelper.writableDatabase
-      testWriteAndReadFromDifferentWritableDatabase(
-        DELAY_DB_WRITE_MS,
-        db,
-        db
+        dbHelper.readableDatabase
       )
     }
 
@@ -66,16 +57,6 @@ class MainActivity : AppCompatActivity() {
         DELAY_DB_WRITE_MS,
         dbHelper.writableDatabase,
         dbHelper.writableDatabase,
-        false
-      )
-    }
-
-    binding.mainContent.sameDbWithoutTrans.setOnClickListener {
-      val db = dbHelper.writableDatabase
-      testWriteAndReadFromDifferentWritableDatabase(
-        DELAY_DB_WRITE_MS,
-        db,
-        db,
         false
       )
     }
