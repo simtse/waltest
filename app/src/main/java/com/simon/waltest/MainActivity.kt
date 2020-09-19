@@ -10,9 +10,9 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.simon.waltest.TestDatabaseOpenHelperCallback.Companion.TABLE_NAME_TEST
+import com.simon.waltest.databinding.ActivityMainBinding
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -26,6 +26,9 @@ class MainActivity : AppCompatActivity() {
 
   private val compositeDisposable = CompositeDisposable()
 
+  private lateinit var _binding: ActivityMainBinding
+  private val binding get() = _binding
+
   private val dbHelper by lazy {
     TestDatabaseOpenHelperCallback.createSupportSqlOpenHelper(this)
   }
@@ -36,10 +39,11 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-    setSupportActionBar(findViewById(R.id.toolbar))
+    _binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+    setSupportActionBar(binding.toolbar)
 
-    findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
+    binding.fab.setOnClickListener {
       testWriteAndReadFromDifferentWritableDatabase()
     }
   }
