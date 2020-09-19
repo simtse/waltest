@@ -78,6 +78,16 @@ class MainActivity : AppCompatActivity() {
         false
       )
     }
+
+    binding.mainContent.delayDoubleReadWithTransaction.setOnClickListener {
+      readWithDelay(1, DELAY_DB_WRITE_MS, dbHelper.writableDatabase, true)
+      readWithDelay(2, 0, dbHelper.writableDatabase, true)
+    }
+
+    binding.mainContent.delayDoubleReadWithoutTransaction.setOnClickListener {
+      readWithDelay(1, DELAY_DB_WRITE_MS, dbHelper.writableDatabase, true)
+      readWithDelay(2, 0, dbHelper.writableDatabase, false)
+    }
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -106,9 +116,9 @@ class MainActivity : AppCompatActivity() {
       Completable.fromCallable {
         val threadName = Thread.currentThread().name
         val db = writingDatabase
-        Timber.d("$threadName write about to start transaction")
 
         db.beginTransactionNonExclusive()
+        Timber.d("$threadName write started transaction")
 
         insertValue(db, currentTimeString())
 
@@ -135,9 +145,9 @@ class MainActivity : AppCompatActivity() {
         val db = readingDatabase
 
         if (readShouldUseTransaction) {
-          Timber.d("$threadName read about to start transaction")
 
           db.beginTransactionNonExclusive()
+          Timber.d("$threadName read started transaction")
           val text = readValue(db)
           db.setTransactionSuccessful()
           db.endTransaction()
@@ -154,6 +164,46 @@ class MainActivity : AppCompatActivity() {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
           { Snackbar.make(rootView, "Done Read - $it", Snackbar.LENGTH_SHORT).show() },
+          { Timber.e(it, "Errored for writing") }
+        )
+    )
+  }
+
+  private fun readWithDelay(
+    requestNum: Int,
+    delay: Long,
+    db: SupportSQLiteDatabase,
+    readShouldUseTransaction: Boolean = true
+  ) {
+    compositeDisposable.add(
+      Single.fromCallable {
+        val threadName = Thread.currentThread().name
+        if (readShouldUseTransaction) {
+
+          db.beginTransactionNonExclusive()
+          Timber.d("$threadName #$requestNum read started transaction")
+
+          if (delay > 0) {
+            Timber.d("$threadName #$requestNum read going to sleep for $delay ms")
+            Thread.sleep(delay)
+          }
+
+          val text = readValue(db)
+          db.setTransactionSuccessful()
+          db.endTransaction()
+
+          Timber.d("$threadName #$requestNum read transaction done")
+          text
+        } else {
+          Timber.d("$threadName #$requestNum read start - no transaction")
+          readValue(db)
+          Timber.d("$threadName #$requestNum read done - no transaction")
+        }
+      }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(
+          { Snackbar.make(rootView, "#$requestNum Done Read - $it", Snackbar.LENGTH_SHORT).show() },
           { Timber.e(it, "Errored for writing") }
         )
     )

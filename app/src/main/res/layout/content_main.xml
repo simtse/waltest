@@ -48,4 +48,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/no_delay_with_transaction" />
 
+    <Button
+        android:id="@+id/delay_double_read_with_transaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="delay double read with transaction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/no_delay_without_transaction" />
+
+    <Button
+        android:id="@+id/delay_double_read_without_transaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delay double read without transaction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/delay_double_read_with_transaction" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
