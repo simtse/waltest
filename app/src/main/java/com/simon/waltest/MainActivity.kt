@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity() {
       readWithDelay(1, DELAY_DB_WRITE_MS, dbHelper.writableDatabase, true)
       readWithDelay(2, 0, dbHelper.writableDatabase, false)
     }
+
     binding.mainContent.delayDoubleWriteWithTransaction.setOnClickListener {
       writeWithDelay(1, DELAY_DB_WRITE_MS, dbHelper.writableDatabase, true)
       writeWithDelay(2, 0, dbHelper.writableDatabase, true)
