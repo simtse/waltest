@@ -88,4 +88,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/delay_double_write_with_transaction" />
 
+    <Button
+        android:id="@+id/nested_insert_read"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Nested Insert and Read"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/delay_double_write_without_transaction" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

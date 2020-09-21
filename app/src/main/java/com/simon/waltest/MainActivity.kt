@@ -99,6 +99,11 @@ class MainActivity : AppCompatActivity() {
       writeWithDelay(2, 0, dbHelper.writableDatabase, false)
       writeWithDelay(3, 0, dbHelper.writableDatabase, false)
       writeWithDelay(4, 0, dbHelper.writableDatabase, false)
+      writeWithDelay(5, 0, dbHelper.writableDatabase, false)
+    }
+
+    binding.mainContent.nestedInsertRead.setOnClickListener {
+      tryToDeadlockTransactions(dbHelper.writableDatabase)
     }
   }
 
@@ -259,6 +264,45 @@ class MainActivity : AppCompatActivity() {
           { Timber.e(it, "Errored for writing") }
         )
     )
+  }
+
+  private fun tryToDeadlockTransactions(db: SupportSQLiteDatabase) {
+
+    val readSingle = Single.fromCallable {
+      val threadName = Thread.currentThread().name
+      Timber.d("$threadName read - about to start transaction")
+      db.beginTransactionNonExclusive()
+      Timber.d("$threadName read - transaction started")
+      val text = readValue(db)
+      Timber.d("$threadName read - value read")
+      db.setTransactionSuccessful()
+      db.endTransaction()
+      Timber.d("$threadName read - transaction completed")
+      text
+    }
+
+    Completable.fromCallable {
+      val threadName = Thread.currentThread().name
+      Timber.d("$threadName insert - about to start transaction")
+      db.beginTransaction()
+      Timber.d("$threadName insert - transaction started")
+
+      insertValue(db, currentTimeString())
+      Timber.d("$threadName insert - value inserted")
+      val readResult = readSingle.blockingGet()
+      Timber.d("$threadName insert - back from get an got value $readResult")
+
+      db.setTransactionSuccessful()
+      db.endTransaction()
+      Timber.d("$threadName insert - transaction all ended")
+    }
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(
+        { Timber.d("Done inserting (with read in between)") },
+        { Timber.e(it, "Error with nested transaction") }
+      )
+
   }
 
   override fun onStop() {
