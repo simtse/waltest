@@ -281,16 +281,25 @@ class MainActivity : AppCompatActivity() {
       text
     }
 
+    val readSingleNoTransaction = Single.fromCallable {
+      val threadName = Thread.currentThread().name
+      Timber.d("$threadName read - no transaction started")
+      val text = readValue(db)
+      Timber.d("$threadName read - no transaction ended $text")
+      text
+    }
+
     Completable.fromCallable {
       val threadName = Thread.currentThread().name
       Timber.d("$threadName insert - about to start transaction")
-      db.beginTransaction()
+      db.beginTransactionNonExclusive()
       Timber.d("$threadName insert - transaction started")
 
       insertValue(db, currentTimeString())
       Timber.d("$threadName insert - value inserted")
-      val readResult = readSingle.blockingGet()
-      Timber.d("$threadName insert - back from get an got value $readResult")
+      val readResult = readSingle.subscribeOn(Schedulers.computation()).blockingGet()
+
+      Timber.d("$threadName insert - back from blocking get and got value $readResult")
 
       db.setTransactionSuccessful()
       db.endTransaction()
@@ -303,6 +312,21 @@ class MainActivity : AppCompatActivity() {
         { Timber.e(it, "Error with nested transaction") }
       )
 
+    Single.fromCallable {
+      val threadName = Thread.currentThread().name
+      Timber.d("$threadName secondary sleep 1s")
+      Thread.sleep(1000)
+      Timber.d("$threadName secondary start blocking get")
+      val result = readSingleNoTransaction.blockingGet()
+      Timber.d("$threadName secondary end blocking get $result")
+      result
+    }
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(
+      { Timber.d("Done fetching secondary $it") },
+      { Timber.e(it, "Error fetching secondary") }
+    )
   }
 
   override fun onStop() {
