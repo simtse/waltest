@@ -156,8 +156,9 @@ class MainActivity : AppCompatActivity() {
           text
         } else {
           Timber.d("$threadName read start - no transaction")
-          readValue(db)
+          val text = readValue(db)
           Timber.d("$threadName read done - no transaction")
+          text
         }
       }
         .subscribeOn(Schedulers.io())
@@ -196,8 +197,9 @@ class MainActivity : AppCompatActivity() {
           text
         } else {
           Timber.d("$threadName #$requestNum read start - no transaction")
-          readValue(db)
+          val text = readValue(db)
           Timber.d("$threadName #$requestNum read done - no transaction")
+          text
         }
       }
         .subscribeOn(Schedulers.io())
@@ -222,7 +224,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun readValue(supportSQLiteDatabase: SupportSQLiteDatabase): String {
     val cursor: Cursor = supportSQLiteDatabase.query(
-      "SELECT _id, value FROM $TABLE_NAME_TEST LIMIT 1"
+      "SELECT _id, value FROM $TABLE_NAME_TEST ORDER BY _id DESC LIMIT 1"
     )
     return cursor.use {
       it.moveToFirst()
