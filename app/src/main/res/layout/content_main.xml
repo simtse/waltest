@@ -10,10 +10,10 @@
         android:id="@+id/diff_db_w_trans"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="108dp"
+        android:layout_marginTop="56dp"
         android:text="Write Delay - Read with transaction"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.522"
+        app:layout_constraintHorizontal_bias="0.525"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
@@ -67,5 +67,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/delay_double_read_with_transaction" />
+
+    <Button
+        android:id="@+id/delay_double_write_with_transaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="delay double write with transaction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/delay_double_read_without_transaction" />
+
+    <Button
+        android:id="@+id/delay_double_write_without_transaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delay Double Write without transaction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/delay_double_write_with_transaction" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

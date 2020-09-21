@@ -88,6 +88,17 @@ class MainActivity : AppCompatActivity() {
       readWithDelay(1, DELAY_DB_WRITE_MS, dbHelper.writableDatabase, true)
       readWithDelay(2, 0, dbHelper.writableDatabase, false)
     }
+    binding.mainContent.delayDoubleReadWithTransaction.setOnClickListener {
+      writeWithDelay(1, DELAY_DB_WRITE_MS, dbHelper.writableDatabase, true)
+      writeWithDelay(2, 0, dbHelper.writableDatabase, true)
+    }
+
+    binding.mainContent.delayDoubleReadWithoutTransaction.setOnClickListener {
+      writeWithDelay(1, DELAY_DB_WRITE_MS, dbHelper.writableDatabase, true)
+      writeWithDelay(2, 0, dbHelper.writableDatabase, false)
+      writeWithDelay(3, 0, dbHelper.writableDatabase, false)
+      writeWithDelay(4, 0, dbHelper.writableDatabase, false)
+    }
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -206,6 +217,44 @@ class MainActivity : AppCompatActivity() {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
           { Snackbar.make(rootView, "#$requestNum Done Read - $it", Snackbar.LENGTH_SHORT).show() },
+          { Timber.e(it, "Errored for writing") }
+        )
+    )
+  }
+
+  private fun writeWithDelay(
+    requestNum: Int,
+    delay: Long,
+    db: SupportSQLiteDatabase,
+    readShouldUseTransaction: Boolean = true
+  ) {
+    compositeDisposable.add(
+      Completable.fromCallable {
+        val threadName = Thread.currentThread().name
+        if (readShouldUseTransaction) {
+          db.beginTransactionNonExclusive()
+          Timber.d("$threadName #$requestNum write started transaction")
+
+          insertValue(db, currentTimeString())
+
+          if (delay > 0) {
+            Timber.d("$threadName #$requestNum write going to sleep for $delay ms")
+            Thread.sleep(delay)
+          }
+
+          db.setTransactionSuccessful()
+          db.endTransaction()
+          Timber.d("$threadName #$requestNum write transaction done")
+        } else {
+          Timber.d("$threadName #$requestNum write started no transaction")
+          insertValue(db, currentTimeString())
+          Timber.d("$threadName #$requestNum write ended no transaction")
+        }
+      }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(
+          { Snackbar.make(rootView, "Done Write", Snackbar.LENGTH_SHORT).show() },
           { Timber.e(it, "Errored for writing") }
         )
     )
