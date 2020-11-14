@@ -44,6 +44,10 @@ class MainActivity : AppCompatActivity() {
     setContentView(binding.root)
     setSupportActionBar(binding.toolbar)
 
+    binding.mainContent.navRxTest.setOnClickListener {
+      startActivity(RxJavaDeadlockActivity.newIntent(this))
+    }
+
     binding.mainContent.diffDbWTrans.setOnClickListener {
       testWriteAndReadFromDifferentWritableDatabase(
         DELAY_DB_WRITE_MS,
